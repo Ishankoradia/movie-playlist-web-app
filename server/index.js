@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const User = require('./models/user.model');
+const Playlist = require('./models/playlist.model');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
@@ -70,12 +71,61 @@ app.get('/api/authenticate', async (req, res) => {
         
         res.json({success: true, user: user})
     } catch (error) {
-        console.log('error');
         res.json({success: false, error: 'invalid token'});
     }
 
     
 })
+
+app.post('/api/addplaylist', async (req, res) => {   
+
+    try {
+        const token = req.headers['x-access-token'];
+
+        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+        const data = req.body;
+
+        if (token === data.userdata.token){
+            const playlist = await Playlist.create({
+                name: data.playlist,
+                user_id: data.userdata.user._id
+            });
+    
+            return res.json({success: true, playlist: playlist});
+    
+        } else{
+            return res.json({success: false, error: 'invalid token'});
+        }
+    } catch (error) {
+        res.json({success: false, error: 'invalid token'});
+    }   
+    
+})
+
+
+app.post('/api/getplaylists', async (req, res) => {
+    try {
+        const token = req.headers['x-access-token'];
+        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+        const data = req.body;
+
+        if (token === data.userdata.token){
+            const playlists = await Playlist.find({user_id: {$eq: data.userdata.user._id} }).sort({createdAt: -1});
+            return res.json({success: true, playlists: playlists});
+
+        } else{
+            return res.json({success: false, error: 'invalid token'});
+        }
+        
+    } catch (error) {
+        res.json({success: false, error: 'invalid token'});
+    }    
+    
+})
+
+
 
 const PORT = process.env.PORT || 5000;
 
