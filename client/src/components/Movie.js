@@ -1,23 +1,36 @@
-import React from 'react'
+import { React, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CurrentMovieContext from '../context/currentMovieContext';
 
-const Movie = ({movie, setShow}) => {
+const Movie = ({m, setShow}) => {
 
-    function addMovie(){
+    //set this to save in playlist when clicked on plus icon
+    const {currentMovie, setCurrentMovie} = useContext(CurrentMovieContext);
+    
+    //set this movie to render on the screen with the poster link changed if not available
+    const [movie, setMovie] = useState(m);
+
+    function openSaveMovie(){
         setShow(true);
+        setCurrentMovie(movie);
     }
+
+    //change the movie's object poster link if not available
+    useEffect(() => {
+        if(m.Poster === "N/A"){
+            m.Poster = "./images/poster_not_found.png";
+            setMovie({...m});
+        }
+    }, [])
 
     return (
         <MovieContainer id={movie.imdbID}>
-            {movie.Poster !== "N/A" ?
-               <Img src={movie.Poster} alt={movie.Title}/> :
-               <Img src={"./images/poster_not_found.png"} alt={movie.Title}/>
-            }
+            <Img src={movie.Poster} alt={movie.Title}/>
             <P>Title: {movie.Title}</P>
             <P>Year: {movie.Year}</P>
-            <IconContainer onClick={addMovie}>
+            <IconContainer onClick={openSaveMovie}>
                 <AddIcon />
             </IconContainer>
         </MovieContainer>

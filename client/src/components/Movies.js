@@ -16,7 +16,7 @@ const Movies = () => {
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(false);
     const [totalpages, setTotalPages] = useState(1);
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false); //setShowModal(false)
 
     const [error, setError] = useState({
         success: true,
@@ -109,7 +109,7 @@ const Movies = () => {
             } 
             {(error.success) ?
             <MoviesContainer> 
-                {movies.map(m => <Movie key={m.imdbID} movie={m} setShow={setShowModal}/>)}                
+                {movies.map(m => <Movie key={m.imdbID} m={m} setShow={setShowModal}/>)}                
             </MoviesContainer>  :
             <StyleLoader>
                 {error.error}
@@ -123,7 +123,7 @@ const Movies = () => {
                 <StyleArrowNext onClick={nextPage}/>
             </Footer>
             }
-            {showModal && <SaveMovieModal show={showModal} />}
+            {<SaveMovieModal show={showModal} setShow={setShowModal} />}
             
         </Container>
        
