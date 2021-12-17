@@ -8,8 +8,10 @@ const Movie = new mongoose.Schema(
         year: {type: String},
         poster: {type: String, required: true}
     },
-    {collection: 'movies'}
+    {collection: 'movies'},
 )
+
+Movie.set('timestamps', true);
 
 const model = mongoose.model('Movie', Movie)
 

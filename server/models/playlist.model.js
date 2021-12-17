@@ -8,6 +8,8 @@ const Playlist = new mongoose.Schema(
     {collection: 'playlists'}
 )
 
+Playlist.set('timestamps', true);
+
 const model = mongoose.model('Playlist', Playlist)
 
 module.exports = model;
