@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const User = require('./models/user.model');
 const Playlist = require('./models/playlist.model');
+const Movie = require('./models/movie.model');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
@@ -114,6 +115,66 @@ app.post('/api/getplaylists', async (req, res) => {
         if (token === data.userdata.token){
             const playlists = await Playlist.find({user_id: {$eq: data.userdata.user._id} }).sort({createdAt: -1});
             return res.json({success: true, playlists: playlists});
+
+        } else{
+            return res.json({success: false, error: 'invalid token'});
+        }
+        
+    } catch (error) {
+        res.json({success: false, error: 'invalid token'});
+    }    
+    
+})
+
+app.delete('/api/deleteplaylist', async (req, res) => {
+    try {
+        const token = req.headers['x-access-token'];
+        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+        const data = req.body;
+
+        if (token === data.userdata.token){
+            //remove playlist
+            const p = await Playlist.deleteOne({'_id': {$eq: data._id}});
+            //remove related movies also
+            const m = await Playlist.deleteMany({'playlist_id': {$eq: data._id}});
+            return res.json({success: true});
+
+        } else{
+            return res.json({success: false, error: 'invalid token'});
+        }
+        
+    } catch (error) {
+        res.json({success: false, error: 'invalid token'});
+    }    
+    
+})
+
+
+app.post('/api/savemovietoplaylists', async (req, res) => {
+    try {
+        const token = req.headers['x-access-token'];
+        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+        const data = req.body;
+
+        if (token === data.userdata.token){
+            console.log("saving");
+            const playlists = data.playlists
+
+            const movie = data.movie; //comes from the OMDB api
+            
+            const m = await playlists.map(item => {
+                Movie.create({
+                    playlist_id: item._id,
+                    imdb_id: movie.imdbID,
+                    title: movie.Title,
+                    year: movie.Year,
+                    poster: movie.Poster
+                });
+            });
+            //const playlists = await Playlist.find({user_id: {$eq: data.userdata.user._id} }).sort({createdAt: -1});
+            return res.json({success: true});
 
         } else{
             return res.json({success: false, error: 'invalid token'});

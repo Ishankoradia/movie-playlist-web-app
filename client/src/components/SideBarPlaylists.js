@@ -37,6 +37,7 @@ const SideBarPlaylists = () => {
         const data = await req.json();
         if(data.success){
             setCurrentPlaylists([data.playlist, ...currentPlaylists]);
+            setNewPlaylistName('');
         }
     }
 
@@ -83,7 +84,7 @@ const SideBarPlaylists = () => {
             </Title>
             <PlaylistsContainer>
                 {
-                    currentPlaylists.map(item => <Playlist name={item.name} />)
+                    currentPlaylists.map(item => <Playlist key={item._id} _id={item._id}  name={item.name} />)
                 }
             </PlaylistsContainer>
 
@@ -129,6 +130,8 @@ const Input = styled.input`
 `;
 
 const PlaylistsContainer = styled.div`
-display: flex;
-flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding-top:20px;
 `;

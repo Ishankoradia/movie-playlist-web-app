@@ -2,8 +2,16 @@ import { React, useState, useEffect, useContext } from 'react'
 import PlaylistContext from '../context/playlistContext';
 import '../styles/saveMovieModal.css';
 import CurrentMovieContext from '../context/currentMovieContext';
+import UserContext from '../context/userContext';
+
+const config = require('../config/config');
 
 const Modal = ({show, setShow}) => {
+    const { userData, setUserData } = useContext(UserContext); //this has token and the current user
+
+    //current movie's playlists 
+    const [currentMovieList, setCurrentMovieList] = useState([]);
+
     //movie to save
     const {currentMovie, setCurrentMovie} = useContext(CurrentMovieContext);
 
@@ -39,6 +47,38 @@ const Modal = ({show, setShow}) => {
         setSaveToPlaylists(currentPlaylists.filter((item, index) => checkedState[index]));
 
         //post request to save the movie to the playlists checked
+        saveMovie();
+    }
+
+    async function deleteMovies(){ //for the unselected playlists that were selected before
+
+    }
+
+    async function saveMovie(){ //for the newly selected playlists
+        const token = localStorage.getItem('token');
+
+        const req = await fetch(`${config.SERVER_URI}/api/savemovietoplaylists`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': token,
+            },
+            body: JSON.stringify({
+                userdata: userData,
+                movie: currentMovie,
+                playlists: saveToPlaylists
+            })
+        });
+
+        const data = await req.json();
+
+        // if(data.success){
+        //     setCurrentPlaylists(data.playlists);
+        // }
+    }
+
+    async function getPlaylistsOfSelectedMovie(){
+        
     }
 
     return (
