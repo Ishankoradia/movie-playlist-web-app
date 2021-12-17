@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const config = require('../config/config');
 
@@ -42,6 +43,7 @@ function Register() {
         </FormContainer>
         <ButtonContainer>
           <ButtonInput type="submit" value="Register"/>
+          <StyleLink to="/login">Click here to login</StyleLink>
         </ButtonContainer>  
       </Wrap>        
       </Form>
@@ -88,7 +90,9 @@ const Input = styled.input`
 `;
 
 const ButtonContainer = styled.div`
-  
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 const ButtonInput = styled.input`
@@ -101,3 +105,12 @@ const ButtonInput = styled.input`
     background-color: rgb(85,85,85);
   }
 `;
+
+const StyleLink = styled(Link)`
+  color: darkgrey;
+  font-size: 15px;
+  text-align: center;
+  &:hover {
+      color: white;
+  }
+`
