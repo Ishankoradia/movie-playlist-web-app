@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const Movie = new mongoose.Schema(
     {
         playlist_id: {type: String, require: true},
-        imdb_id: {type: String, required: true},
-        title: {type: String, required: true},
-        year: {type: String},
-        poster: {type: String, required: true}
+        imdbID: {type: String, required: true},
+        Title: {type: String, required: true},
+        Year: {type: String},
+        Poster: {type: String, required: true}
     },
     {collection: 'movies'},
 )

@@ -159,20 +159,9 @@ app.post('/api/savemovietoplaylists', async (req, res) => {
         const data = req.body;
 
         if (token === data.userdata.token){
-            console.log("saving");
-            const playlists = data.playlists
 
-            const movie = data.movie; //comes from the OMDB api
-            
-            const m = await playlists.map(item => {
-                Movie.create({
-                    playlist_id: item._id,
-                    imdb_id: movie.imdbID,
-                    title: movie.Title,
-                    year: movie.Year,
-                    poster: movie.Poster
-                });
-            });
+            const m = await Movie.insertMany(data.movies);            
+
             //const playlists = await Playlist.find({user_id: {$eq: data.userdata.user._id} }).sort({createdAt: -1});
             return res.json({success: true});
 
@@ -186,6 +175,55 @@ app.post('/api/savemovietoplaylists', async (req, res) => {
     
 })
 
+
+
+
+app.post('/api/getplaylistsofselectedmovie', async (req, res) => {
+    try {
+        const token = req.headers['x-access-token'];
+        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+        const data = req.body;
+
+        if (token === data.userdata.token){           
+
+            const p = await Movie.find({imdbID: {$eq: data.movie.imdbID}}).select('playlist_id');
+            return res.json({success: true, playlists: p});
+
+        } else{
+            return res.json({success: false, error: 'invalid token'});
+        }
+        
+    } catch (error) {
+        res.json({success: false, error: 'invalid token'});
+    }    
+    
+})
+
+
+
+app.delete('/api/deletemovieplaylists', async (req, res) => {
+    try {
+        const token = req.headers['x-access-token'];
+        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+        const data = req.body;
+
+        if (token === data.userdata.token){
+            console.log("deleting playlsits "+data.playlist_ids + " with movie id  "+ data.movie.imdbID);
+            //remove movie playlists
+            const m = await Movie.deleteMany({ imdbID: data.movie.imdbID, playlist_id: {$in: data.playlist_ids} });
+            return res.json({success: true});
+
+        } else{
+            return res.json({success: false, error: 'invalid token'});
+        }
+        
+    } catch (error) {
+        res.json({success: false, error: 'invalid token'});
+    }    
+    
+})
 
 
 const PORT = process.env.PORT || 5000;

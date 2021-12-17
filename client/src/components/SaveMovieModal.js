@@ -23,17 +23,26 @@ const Modal = ({show, setShow}) => {
     //save to these playlists
     const [saveToPlaylists, setSaveToPlaylists] = useState([]);
 
+    //saved playlists: the movie to which the playlist is saved
+    const [savedPlaylists, setSavedPlaylists] = useState([]);
+
     useEffect(() => {
-        //fetch current user's playlist from playlist context
-        setCheckedState(new Array(currentPlaylists.length).fill(false));
+        //get playlists for the current movie
+        getPlaylistsOfSelectedMovie();
     }, [show, setShow])
+
+    useEffect(() => {
+        //save this movie to all the playlist selected
+        setSaveToPlaylists(currentPlaylists.filter((item, index) => checkedState[index]));
+        
+    }, [checkedState, setCheckedState])
 
     function handleCheckboxChange(position) {
         const updatedCheckedState = checkedState.map((item, index) =>
             index === position ? !item : item
         );
 
-        setCheckedState(updatedCheckedState);
+        setCheckedState(updatedCheckedState);        
     }
 
     function closeModal(){
@@ -41,13 +50,10 @@ const Modal = ({show, setShow}) => {
     }
 
     function saveModal(){
-        setShow(false);//close the modal
-
-        //save this movie to all the playlists selected
-        setSaveToPlaylists(currentPlaylists.filter((item, index) => checkedState[index]));
-
         //post request to save the movie to the playlists checked
         saveMovie();
+
+        setShow(false);//close the modal        
     }
 
     async function deleteMovies(){ //for the unselected playlists that were selected before
@@ -57,6 +63,24 @@ const Modal = ({show, setShow}) => {
     async function saveMovie(){ //for the newly selected playlists
         const token = localStorage.getItem('token');
 
+        const movies = saveToPlaylists.map(item => {
+
+            const m = {};
+
+            Object.keys(currentMovie).map(function(key, value){
+                m[key] = currentMovie[key];
+            })
+
+            m['playlist_id'] = item._id;
+
+            return m;
+        });
+        
+        //we dont need ti add those movie playlists that has already been added .
+        const movies1 = movies.filter(item1 => savedPlaylists.length > 0 ?
+            savedPlaylists.some(item2 => item1.playlist_id !== item2.playlist_id) : true);
+       
+
         const req = await fetch(`${config.SERVER_URI}/api/savemovietoplaylists`, {
             method: 'POST',
             headers: {
@@ -65,8 +89,23 @@ const Modal = ({show, setShow}) => {
             },
             body: JSON.stringify({
                 userdata: userData,
-                movie: currentMovie,
-                playlists: saveToPlaylists
+                movies: movies1,
+            })
+        });
+
+        //movie playlists that were added before delete them if unselected {_id:adfgdf, playlist: asda}
+        const deleteplaylists = savedPlaylists.filter(item1 => movies.some(item2 => item1.playlist_id !== item2.playlist_id));
+
+        const req1 = await fetch(`${config.SERVER_URI}/api/deletemovieplaylists`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': token,
+            },
+            body: JSON.stringify({
+                userdata: userData,
+                playlist_ids: deleteplaylists.map(item => item.playlist_id),
+                movie: currentMovie
             })
         });
 
@@ -78,7 +117,33 @@ const Modal = ({show, setShow}) => {
     }
 
     async function getPlaylistsOfSelectedMovie(){
-        
+        const token = localStorage.getItem('token');
+
+        const req = await fetch(`${config.SERVER_URI}/api/getplaylistsofselectedmovie`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': token,
+            },
+            body: JSON.stringify({
+                userdata: userData,
+                movie: currentMovie,
+            })
+        });
+
+        const data = await req.json();
+        const updatedCheckedState = new Array(currentPlaylists.length).fill(false);
+        console.log(data.playlists);
+        if(data.success){            
+            data.playlists.map(item => {
+                const index = currentPlaylists.findIndex(p => p._id === item.playlist_id);
+                updatedCheckedState[index] = true;
+            });
+        }
+
+        setCheckedState(updatedCheckedState); 
+
+        setSavedPlaylists(data.playlists);
     }
 
     return (
