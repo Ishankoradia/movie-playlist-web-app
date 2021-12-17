@@ -5,6 +5,8 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import UserContext from './context/userContext';
+import PlaylistContext from './context/playlistContext';
+import CurrentMovieContext from './context/currentMovieContext';
 
 const App = () => {
 
@@ -15,16 +17,22 @@ const App = () => {
 
     const [currentPlaylists, setCurrentPlaylists] = useState([]);
 
+    const [currentMovie, setCurrentMovie] = useState({});
+
     return (
         <div>
             <BrowserRouter>
-                <UserContext.Provider value={{ userData, setUserData, currentPlaylists, setCurrentPlaylists }}>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                    </Routes>
+                <UserContext.Provider value={{ userData, setUserData }}>
+                    <PlaylistContext.Provider value={{currentPlaylists, setCurrentPlaylists}}>
+                        <CurrentMovieContext.Provider value={{currentMovie, setCurrentMovie}}>
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/register" element={<Register />} />
+                                <Route path="/dashboard" element={<Dashboard />} />
+                            </Routes>
+                        </CurrentMovieContext.Provider>
+                    </PlaylistContext.Provider>
                 </UserContext.Provider>
             </BrowserRouter>
         </div>
