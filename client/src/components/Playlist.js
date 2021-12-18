@@ -40,7 +40,7 @@ const Playlist = ({name, _id, isPublic}) => {
     }
 
     function copyPlaylistLink(){
-
+        navigator.clipboard.writeText(`${window.location.origin}/playlistview/${_id}`);
     }
 
     function onPlaylistClick(){
@@ -60,8 +60,7 @@ const Playlist = ({name, _id, isPublic}) => {
                 {isPublic && <StyleCopyLinkIcon onClick={copyPlaylistLink} /> }
                 {isPublic ? <StylePublicIcon /> :  <StylePrivateIcon />}
                 <StyleDeleteIcon onClick={deletePlaylist} />
-            </IconContainer>
-            
+            </IconContainer>            
         </PlaylistDiv>
     )
 }

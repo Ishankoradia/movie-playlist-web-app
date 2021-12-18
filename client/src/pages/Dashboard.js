@@ -58,7 +58,7 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <h1>
+        <div>
             {render && 
                 <div>
                     <Header highlight={"dashboard"} />
@@ -69,7 +69,7 @@ const Dashboard = () => {
                     </ContentContainer>                   
                 </div>                
             }
-        </h1>
+        </div>
     )
 }
 

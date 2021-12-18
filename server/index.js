@@ -272,6 +272,27 @@ app.post('/api/getmovies', async (req, res) => {
     
 })
 
+app.get('/playlistview/:id', async (req, res) => {
+    try {
+        console.log("in playlists fetch");
+        const playlist_id = req.params.id;
+
+        const playlist = await Playlist.findOne({_id: playlist_id, is_public: {$eq: true}});
+
+        if(playlist){
+            const movies = await Movie.find({playlist_id: {$eq: playlist_id} }).sort({createdAt: -1});
+
+            return res.json({success: true, movies: movies, playlist: playlist});
+        }
+
+        res.json({success: false, error: 'Only public playlists can be accessed.'});       
+    
+    } catch (error) {
+        res.json({success: false, error: 'invalid token'});
+    }    
+    
+})
+
 
 const PORT = process.env.PORT || 5000;
 

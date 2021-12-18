@@ -9,6 +9,7 @@ import UserContext from './context/userContext';
 import PlaylistContext from './context/playlistContext';
 import CurrentMovieContext from './context/currentMovieContext';
 import CurrentPlaylistContext from './context/currentPlaylistContext';
+import ListView from './pages/ListView';
 
 const App = () => {
 
@@ -35,7 +36,7 @@ const App = () => {
                                     <Route path="/login" element={<Login />} />
                                     <Route path="/register" element={<Register />} />
                                     <Route path="/dashboard" element={<Dashboard />} />
-                                    <Route path="/playlists" element={<MyList />} />
+                                    <Route path="/playlistview/:id" element={<ListView />} />
                                 </Routes>
                             </CurrentPlaylistContext.Provider>
                         </CurrentMovieContext.Provider>

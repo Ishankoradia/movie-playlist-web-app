@@ -24,13 +24,12 @@ const Header = ({highlight}) => {
     return (
         <HeaderContainer>
             <Logo>
-                <p>ISHAN007 MOVIES</p>
+                <LogoTitle>ISHAN007 MOVIES</LogoTitle>
             </Logo>
             <NavBar>
                 <NavItem show={highlight === "dashboard" ? true : false} 
                         to="/dashboard">Dashboard</NavItem>
-                <NavItem show={highlight === "list" ? true : false} 
-                        to="/playlists">My List</NavItem>
+                
                 <NavItem show={false} to="/#" onClick={logoutUser}>Log out</NavItem>
                 <UserName>Hi {userData.user ? (userData.user.name) : '' }<br/></UserName>                
             </NavBar>
@@ -44,8 +43,7 @@ const HeaderContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 120px;
-    margin-top: -27px;
+    height: 75px;
 `
 
 const Logo = styled.div`
@@ -57,6 +55,10 @@ const Logo = styled.div`
     align-items: center;
     text-align: center;
 `
+
+const LogoTitle = styled.p`
+    font-size: 20px;
+`;
 
 const NavBar = styled.div`
     flex-grow: 1;
@@ -76,7 +78,6 @@ const UserName = styled.p`
 const NavItem = styled(Link)`
     color: grey;
     cursor: pointer;
-    font-size: 15px;
     text-align: center;
     color: ${props => props.show ? 'white' : 'none'};
     &:hover {
