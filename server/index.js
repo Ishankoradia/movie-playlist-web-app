@@ -138,7 +138,7 @@ app.delete('/api/deleteplaylist', async (req, res) => {
             //remove playlist
             const p = await Playlist.deleteOne({'_id': {$eq: data._id}});
             //remove related movies also
-            const m = await Playlist.deleteMany({'playlist_id': {$eq: data._id}});
+            const m = await Movie.deleteMany({'playlist_id': {$eq: data._id}});
             return res.json({success: true});
 
         } else{

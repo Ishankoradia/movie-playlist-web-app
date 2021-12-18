@@ -36,6 +36,9 @@ const Playlist = ({name, _id, isPublic}) => {
 
         if(data.success){
             setCurrentPlaylists(currentPlaylists.filter(item => item._id !== _id));
+            if(selectedPlaylistId === _id){
+                setSelectedPlaylistId(false);
+            }
         }
     }
 
