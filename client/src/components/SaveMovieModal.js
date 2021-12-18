@@ -76,9 +76,9 @@ const Modal = ({show, setShow}) => {
             return m;
         });
         
-        //we dont need ti add those movie playlists that has already been added .
+        //we dont need ti add those movie playlists that have already been added .
         const movies1 = movies.filter(item1 => savedPlaylists.length > 0 ?
-            savedPlaylists.some(item2 => item1.playlist_id !== item2.playlist_id) : true);
+            savedPlaylists.every(item2 => item1.playlist_id !== item2.playlist_id) : true);
        
 
         const req = await fetch(`${config.SERVER_URI}/api/savemovietoplaylists`, {
@@ -94,7 +94,7 @@ const Modal = ({show, setShow}) => {
         });
 
         //movie playlists that were added before delete them if unselected {_id:adfgdf, playlist: asda}
-        const deleteplaylists = savedPlaylists.filter(item1 => movies.some(item2 => item1.playlist_id !== item2.playlist_id));
+        const deleteplaylists = savedPlaylists.filter(item1 => !movies.some(item2 => item1.playlist_id === item2.playlist_id));
 
         const req1 = await fetch(`${config.SERVER_URI}/api/deletemovieplaylists`, {
             method: 'DELETE',

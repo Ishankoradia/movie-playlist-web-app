@@ -3,13 +3,19 @@ import { React, useContext} from 'react';
 import PlaylistContext from '../context/playlistContext';
 import DeleteIcon from '@material-ui/icons/Delete';
 import UserContext from '../context/userContext';
+import PublicIcon from '@material-ui/icons/Public';
+import PrivateIcon from '@material-ui/icons/Lock';
+import CopyLinkIcon from '@material-ui/icons/FileCopy';
+import CurrentPlaylistContext from '../context/currentPlaylistContext';
 
 const config = require('../config/config');
 
-const Playlist = ({name, _id}) => {
+const Playlist = ({name, _id, isPublic}) => {
     const {currentPlaylists, setCurrentPlaylists} = useContext(PlaylistContext);
 
     const { userData, setUserData } = useContext(UserContext);
+
+    const {selectedPlaylistId, setSelectedPlaylistId} = useContext(CurrentPlaylistContext);
 
     async function deletePlaylist(){
         const token = localStorage.getItem('token');
@@ -33,10 +39,29 @@ const Playlist = ({name, _id}) => {
         }
     }
 
+    function copyPlaylistLink(){
+
+    }
+
+    function onPlaylistClick(){
+        if(selectedPlaylistId === _id){
+            setSelectedPlaylistId(false);
+        } else{
+            setSelectedPlaylistId(_id);
+        }
+    }
+
     return (
-        <PlaylistDiv>
+        <PlaylistDiv selected={selectedPlaylistId === _id}>
+            <NameContainer onClick={onPlaylistClick}>
             {name}
-            <StyleDeleteIcon onClick={deletePlaylist} />
+            </NameContainer>
+            <IconContainer>
+                {isPublic && <StyleCopyLinkIcon onClick={copyPlaylistLink} /> }
+                {isPublic ? <StylePublicIcon /> :  <StylePrivateIcon />}
+                <StyleDeleteIcon onClick={deletePlaylist} />
+            </IconContainer>
+            
         </PlaylistDiv>
     )
 }
@@ -46,6 +71,7 @@ export default Playlist
 const PlaylistDiv = styled.div`
     border-bottom: 0.25px solid black;
     padding: 15px;
+    background-color: ${props => props.selected ? 'lightgrey' : 'none'};
     &:hover {
         background-color: lightgrey;
     }
@@ -56,4 +82,25 @@ const PlaylistDiv = styled.div`
 const StyleDeleteIcon = styled(DeleteIcon)`
     cursor: pointer;
     color: darkred;
+`;
+
+const StylePublicIcon = styled(PublicIcon)`
+    color: 	#696969;
+`;
+
+const StylePrivateIcon = styled(PrivateIcon)`
+    color: 	#696969;
+`;
+
+const IconContainer = styled.div`
+    display: flex;
+    gap:4px;
+`;
+
+const StyleCopyLinkIcon = styled(CopyLinkIcon)`
+    cursor: pointer;
+`;
+
+const NameContainer = styled.div`
+    cursor: pointer;
 `;

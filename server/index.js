@@ -90,7 +90,8 @@ app.post('/api/addplaylist', async (req, res) => {
         if (token === data.userdata.token){
             const playlist = await Playlist.create({
                 name: data.playlist,
-                user_id: data.userdata.user._id
+                user_id: data.userdata.user._id,
+                is_public: data.is_public
             });
     
             return res.json({success: true, playlist: playlist});
@@ -160,7 +161,9 @@ app.post('/api/savemovietoplaylists', async (req, res) => {
 
         if (token === data.userdata.token){
 
-            const m = await Movie.insertMany(data.movies);            
+            const m = await Movie.insertMany(data.movies);  
+            
+            console.log("saving these "+ m);
 
             //const playlists = await Playlist.find({user_id: {$eq: data.userdata.user._id} }).sort({createdAt: -1});
             return res.json({success: true});
@@ -210,10 +213,54 @@ app.delete('/api/deletemovieplaylists', async (req, res) => {
         const data = req.body;
 
         if (token === data.userdata.token){
-            console.log("deleting playlsits "+data.playlist_ids + " with movie id  "+ data.movie.imdbID);
             //remove movie playlists
             const m = await Movie.deleteMany({ imdbID: data.movie.imdbID, playlist_id: {$in: data.playlist_ids} });
             return res.json({success: true});
+
+        } else{
+            return res.json({success: false, error: 'invalid token'});
+        }
+        
+    } catch (error) {
+        res.json({success: false, error: 'invalid token'});
+    }    
+    
+})
+
+
+app.delete('/api/deletemovie', async (req, res) => {
+    try {
+        const token = req.headers['x-access-token'];
+        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+        const data = req.body;
+
+        if (token === data.userdata.token){
+            console.log("deleting from "+data.playlist_id+" and "+data.movie_id);
+            //remove movie 
+            const m = await Movie.deleteOne({_id: data.movie_id, playlist_id: {$eq: data.playlist_id} });
+            return res.json({success: true});
+
+        } else{
+            return res.json({success: false, error: 'invalid token'});
+        }
+        
+    } catch (error) {
+        res.json({success: false, error: 'invalid token'});
+    }    
+    
+})
+
+app.post('/api/getmovies', async (req, res) => {
+    try {
+        const token = req.headers['x-access-token'];
+        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
+
+        const data = req.body;
+
+        if (token === data.userdata.token){
+            const movies = await Movie.find({playlist_id: {$eq: data.playlist_id} }).sort({createdAt: -1});
+            return res.json({success: true, movies: movies});
 
         } else{
             return res.json({success: false, error: 'invalid token'});

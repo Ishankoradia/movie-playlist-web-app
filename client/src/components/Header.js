@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import UserContext from '../context/userContext';
 
-const Header = () => {
+const Header = ({highlight}) => {
 
     const { userData, setUserData } = useContext(UserContext);
 
@@ -27,9 +27,11 @@ const Header = () => {
                 <p>ISHAN007 MOVIES</p>
             </Logo>
             <NavBar>
-                <NavItem to="/#">Movies</NavItem>
-                <NavItem to="/#">My List</NavItem>
-                <NavItem to="/#" onClick={logoutUser}>Log out</NavItem>
+                <NavItem show={highlight === "dashboard" ? true : false} 
+                        to="/dashboard">Dashboard</NavItem>
+                <NavItem show={highlight === "list" ? true : false} 
+                        to="/playlists">My List</NavItem>
+                <NavItem show={false} to="/#" onClick={logoutUser}>Log out</NavItem>
                 <UserName>Hi {userData.user ? (userData.user.name) : '' }<br/></UserName>                
             </NavBar>
         </HeaderContainer>
@@ -76,6 +78,7 @@ const NavItem = styled(Link)`
     cursor: pointer;
     font-size: 15px;
     text-align: center;
+    color: ${props => props.show ? 'white' : 'none'};
     &:hover {
         color: white;
     }

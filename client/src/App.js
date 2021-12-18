@@ -4,9 +4,11 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
+import MyList from './pages/MyList';
 import UserContext from './context/userContext';
 import PlaylistContext from './context/playlistContext';
 import CurrentMovieContext from './context/currentMovieContext';
+import CurrentPlaylistContext from './context/currentPlaylistContext';
 
 const App = () => {
 
@@ -19,18 +21,23 @@ const App = () => {
 
     const [currentMovie, setCurrentMovie] = useState({});
 
+    const [selectedPlaylistId, setSelectedPlaylistId] = useState(false);
+
     return (
         <div>
             <BrowserRouter>
                 <UserContext.Provider value={{ userData, setUserData }}>
                     <PlaylistContext.Provider value={{currentPlaylists, setCurrentPlaylists}}>
                         <CurrentMovieContext.Provider value={{currentMovie, setCurrentMovie}}>
-                            <Routes>
-                                <Route path="/" element={<Home />} />
-                                <Route path="/login" element={<Login />} />
-                                <Route path="/register" element={<Register />} />
-                                <Route path="/dashboard" element={<Dashboard />} />
-                            </Routes>
+                            <CurrentPlaylistContext.Provider value={{selectedPlaylistId, setSelectedPlaylistId}}>
+                                <Routes>
+                                    <Route path="/" element={<Home />} />
+                                    <Route path="/login" element={<Login />} />
+                                    <Route path="/register" element={<Register />} />
+                                    <Route path="/dashboard" element={<Dashboard />} />
+                                    <Route path="/playlists" element={<MyList />} />
+                                </Routes>
+                            </CurrentPlaylistContext.Provider>
                         </CurrentMovieContext.Provider>
                     </PlaylistContext.Provider>
                 </UserContext.Provider>
