@@ -61,7 +61,7 @@ const DivContainer = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('/images/app-background.png');
+  background-image: url('/images/app-background.jpg');
   display: flex;
  
 `;
