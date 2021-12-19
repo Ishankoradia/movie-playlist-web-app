@@ -146,6 +146,7 @@ const Container = styled.div`
     background-color: lightgrey;
     flex-grow: 1;
     width: 100%;
+    padding-top: 10px;
 `
 
 const SearchContainer = styled.div`
