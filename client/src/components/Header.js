@@ -83,4 +83,5 @@ const NavItem = styled(Link)`
     &:hover {
         color: white;
     }
+    text-decoration: none;
 `;

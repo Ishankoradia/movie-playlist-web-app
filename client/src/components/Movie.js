@@ -62,6 +62,6 @@ const IconContainer = styled.div`
     position: absolute;
     top:0;
     right:0;    
-    background-color: green;
+    background-color: yellow;
     cursor: pointer;
 `;

@@ -57,7 +57,7 @@ app.post('/api/login', async (req, res) => {
 
         return res.json({success: true, user: token});
     } else{
-        return res.json({success: false, user: false});
+        return res.json({success: false, user: false, error: "Please check your login credentials and try again."});
     }
 })
 

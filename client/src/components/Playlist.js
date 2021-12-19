@@ -5,8 +5,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import UserContext from '../context/userContext';
 import PublicIcon from '@material-ui/icons/Public';
 import PrivateIcon from '@material-ui/icons/Lock';
-import CopyLinkIcon from '@material-ui/icons/FileCopy';
+import CopyLinkIcon from '@material-ui/icons/Link';
 import CurrentPlaylistContext from '../context/currentPlaylistContext';
+import {toast} from 'react-toastify';
 
 const config = require('../config/config');
 
@@ -39,11 +40,13 @@ const Playlist = ({name, _id, isPublic}) => {
             if(selectedPlaylistId === _id){
                 setSelectedPlaylistId(false);
             }
+            toast.info("Playlist deleted");
         }
     }
 
     function copyPlaylistLink(){
         navigator.clipboard.writeText(`${window.location.origin}/playlistview/${_id}`);
+        toast.info("Playlist link copied to the clipboard.");
     }
 
     function onPlaylistClick(){
@@ -83,7 +86,7 @@ const PlaylistDiv = styled.div`
 
 const StyleDeleteIcon = styled(DeleteIcon)`
     cursor: pointer;
-    color: darkred;
+    color: #D9352F;
 `;
 
 const StylePublicIcon = styled(PublicIcon)`

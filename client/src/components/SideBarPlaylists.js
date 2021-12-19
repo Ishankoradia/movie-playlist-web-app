@@ -6,6 +6,7 @@ import Add from '@material-ui/icons/Add';
 import UserContext from '../context/userContext';
 import Playlist from './Playlist';
 import CurrentPlaylistContext from '../context/currentPlaylistContext';
+import { toast } from 'react-toastify';
 
 const config = require('../config/config');
 
@@ -48,6 +49,7 @@ const SideBarPlaylists = () => {
             setCurrentPlaylists([data.playlist, ...currentPlaylists]);
             setNewPlaylistName('');
         }
+        toast.info("Playlist created.");
     }
 
     async function fetchPlaylists(){
@@ -95,9 +97,10 @@ const SideBarPlaylists = () => {
                         </Select>
                     </InputContainer>
                        
-                    <ButtonContainer type="submit"><AddIcon /></ButtonContainer>                 
+                    <ButtonContainer type="submit">Create</ButtonContainer>                 
                 </Form>      
             </Title>
+            <P>MY LIST</P>
             <PlaylistsContainer>
                 {
                     currentPlaylists.map(item => <Playlist selected={false} 
@@ -136,13 +139,23 @@ const Form = styled.form`
     align-items: center;
     display: flex;
     margin-left: 10px;
-    justify-content: space-between;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    flex-direction: column;
 `
 
 const ButtonContainer = styled.button`
+    margin-top: 20px;
+    width: 20%;
+    height: 30px;
+    background-color: rgb(52,52,52);
+    color: white;
     cursor: pointer;
-    background-color: Transparent;
-    border: none;
+    &:hover {
+    background-color: rgb(85,85,85);
+    }
+    align-items:right;
 `;
 
 const InputContainer = styled.div`
@@ -173,3 +186,9 @@ const PlaylistsContainer = styled.div`
     padding-top:20px;
     width: 100%;
 `;
+
+const P  = styled.p`
+    font-weight: bold;
+    margin:0;
+    margin-top: 10px;
+`

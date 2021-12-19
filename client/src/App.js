@@ -10,6 +10,9 @@ import PlaylistContext from './context/playlistContext';
 import CurrentMovieContext from './context/currentMovieContext';
 import CurrentPlaylistContext from './context/currentPlaylistContext';
 import ListView from './pages/ListView';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 const App = () => {
 
@@ -43,6 +46,18 @@ const App = () => {
                     </PlaylistContext.Provider>
                 </UserContext.Provider>
             </BrowserRouter>
+            <ToastContainer
+                progressBar={{ color: "crimson" }}
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </div>
     )
 }

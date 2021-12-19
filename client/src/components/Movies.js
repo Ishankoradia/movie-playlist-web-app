@@ -96,6 +96,7 @@ const Movies = () => {
                       }}
                     
                 />
+                
                 <StyledSearchIcon onClick={searchMovies} />
             </SearchContainer>
             {(loading) &&
@@ -142,7 +143,7 @@ const MoviesContainer = styled.div`
 `;
 
 const Container = styled.div`
-    background-color: grey;
+    background-color: lightgrey;
     flex-grow: 1;
     width: 100%;
 `
@@ -152,6 +153,7 @@ const SearchContainer = styled.div`
     display: flex;
     padding: 10px;
     height: 30px;
+    position: relative;
 `;
 
 const Input = styled.input`
@@ -165,6 +167,8 @@ const Input = styled.input`
 
 const StyledSearchIcon = styled(SearchIcon)`
     cursor: pointer;
+    position: absolute;
+    right: 275px;
 `
 
 const StyleLoader = styled.div`

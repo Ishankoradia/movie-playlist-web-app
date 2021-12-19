@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import PlaylistMovie from './PlaylistMovie';
 import UserContext from '../context/userContext';
 import CurrentPlaylistContext from '../context/currentPlaylistContext';
+import AddIcon from '@material-ui/icons/Add';
 
 const config = require('../config/config');
 
@@ -12,7 +13,7 @@ const PlaylistMovies = () => {
 
     const { userData, setUserData } = useContext(UserContext);
 
-    const [movies, setMovies] = useState();
+    const [movies, setMovies] = useState([]);
 
     const [refreshComp, setRefreshComp] = useState(false);
 
@@ -38,6 +39,10 @@ const PlaylistMovies = () => {
         }
     }
 
+    function goToSearch(){
+        setSelectedPlaylistId(false);
+    }
+
     useEffect(() => {
         fetchMovies()
     }, [selectedPlaylistId, refreshComp])
@@ -49,8 +54,14 @@ const PlaylistMovies = () => {
                                             key={m.imdbID}  
                                             movie={m} 
                                             refComp={refreshComp}
-                                            setRefComp = {setRefreshComp}/>)}                
+                                            setRefComp = {setRefreshComp}/>)}
+                {movies.length === 0 && <p>Add movie to your playlist</p>}
+                     
             </MoviesContainer> 
+            <ButtonContainerDiv>
+                <ButtonContainer onClick={goToSearch}><AddIcon/></ButtonContainer>
+            </ButtonContainerDiv>
+                    
         </Container>
     )
 }
@@ -58,7 +69,7 @@ const PlaylistMovies = () => {
 export default PlaylistMovies
 
 const Container = styled.div`
-    background-color: grey;
+    background-color: lightgrey;
     flex-grow: 1;
     width: 100%;
 `
@@ -70,4 +81,15 @@ const MoviesContainer = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     padding: 5px;
+`;
+
+const ButtonContainer = styled.button`
+    background-color: black;
+    color: white;
+    cursor: pointer;
+`;
+
+const ButtonContainerDiv = styled.div`
+    margin-top: 20px;
+    text-align: center;
 `;

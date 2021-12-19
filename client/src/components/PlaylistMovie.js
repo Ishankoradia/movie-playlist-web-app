@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import DeleteIcon from '@material-ui/icons/Delete';
 import UserContext from '../context/userContext';
 import CurrentPlaylistContext from '../context/currentPlaylistContext';
+import { toast } from "react-toastify";
 
 const config = require('../config/config');
 
@@ -32,6 +33,7 @@ const PlaylistMovie = ({movie, refComp, setRefComp}) => {
 
         if(data.success){
             setRefComp(!refComp);
+            toast.info("Movie deleted successfully");
         }
     }
 
@@ -41,7 +43,7 @@ const PlaylistMovie = ({movie, refComp, setRefComp}) => {
             <P>Title: {movie.Title}</P>
             <P>Year: {movie.Year}</P>
             <IconContainer onClick={deleteMovie}>
-                <DeleteIcon />
+                <StyleDeleteIcon/>
             </IconContainer>
         </MovieContainer>
     )
@@ -72,6 +74,11 @@ const IconContainer = styled.div`
     position: absolute;
     top:0;
     right:0;    
-    background-color: darkred;
+    background-color: white;
     cursor: pointer;
+`;
+
+const StyleDeleteIcon = styled(DeleteIcon)`
+    cursor: pointer;
+    color: #D9352F;
 `;

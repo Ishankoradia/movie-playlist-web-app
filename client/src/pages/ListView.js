@@ -11,6 +11,8 @@ const ListView = () => {
 
     const [playlist, setPlaylist] = useState();
 
+    const [error, setError] = useState('');
+
     // const movies = [{
     //     "Title": "Batman: The Killing Joke",
     //     "Year": "2016",
@@ -33,7 +35,11 @@ const ListView = () => {
         if(data.success){
             setMovies(data.movies);
             setPlaylist(data.playlist);
+            setError('');
+        } else{
+            setError(data.error);
         }
+
     }
 
     useEffect(() => {
@@ -66,15 +72,17 @@ const ListView = () => {
                     </PlaylistContainer>
                     <Divider></Divider>
                     <Container>
-                    {movies.map(movie => 
                         <MoviesContainer>
-                            <MovieContainer id={movie.imdbID}>
-                                <Img src={movie.Poster} alt={movie.Title}/>
-                                <P>Title: {movie.Title}</P>
-                                <P>Year: {movie.Year}</P>
-                            </MovieContainer>
-                        </MoviesContainer>
-                    )}
+                            {movies.map(movie => 
+                                
+                                    <MovieContainer id={movie.imdbID}>
+                                        <Img src={movie.Poster} alt={movie.Title}/>
+                                        <P>Title: {movie.Title}</P>
+                                        <P>Year: {movie.Year}</P>
+                                    </MovieContainer>
+                                
+                            )}
+                        </MoviesContainer>                       
                     </Container>
                 </ContentContainer>              
             </div>               
@@ -201,6 +209,7 @@ const NavItem = styled(Link)`
         color: white;
     }
     margin-right: 30px;
+    text-decoration: none;
 `;
 
 

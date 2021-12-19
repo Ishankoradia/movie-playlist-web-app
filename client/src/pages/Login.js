@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
 
 const config = require('../config/config');
 
@@ -25,13 +25,13 @@ function Login() {
 
     const data = await response.json();
 
-    if(data.user){
-      localStorage.setItem('token', data.user);
-      alert('Login successful');
+    if(data.success && data.user){
+      localStorage.setItem('token', data.user);      
       window.location.href = '/dashboard';
+    } else{
+      toast.error(data.error);
     }
 
-    console.log('Login attempted by: '+data);
   }
 
   return (

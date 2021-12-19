@@ -3,6 +3,7 @@ import PlaylistContext from '../context/playlistContext';
 import '../styles/saveMovieModal.css';
 import CurrentMovieContext from '../context/currentMovieContext';
 import UserContext from '../context/userContext';
+import { toast } from "react-toastify";
 
 const config = require('../config/config');
 
@@ -111,9 +112,7 @@ const Modal = ({show, setShow}) => {
 
         const data = await req.json();
 
-        // if(data.success){
-        //     setCurrentPlaylists(data.playlists);
-        // }
+        toast.info("Changes saved successfully");
     }
 
     async function getPlaylistsOfSelectedMovie(){
