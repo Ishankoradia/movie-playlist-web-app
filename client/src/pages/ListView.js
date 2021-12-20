@@ -136,7 +136,7 @@ const PlaylistDiv = styled.div`
 `;
 
 const Container = styled.div`
-    background-color: grey;
+    background-color: lightgrey;
     flex-grow: 1;
     width: 100%;
 `
