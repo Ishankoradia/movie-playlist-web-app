@@ -21,16 +21,12 @@ const Playlist = ({name, _id, isPublic}) => {
     async function deletePlaylist(){
         const token = localStorage.getItem('token');
 
-        const req = await fetch(`${config.SERVER_URI}/api/deleteplaylist`, {
+        const req = await fetch(`${config.SERVER_URI}/api/playlists/${_id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'x-access-token': token,
-            },
-            body: JSON.stringify({
-                userdata: userData,
-                _id: _id
-            })
+            }
         });
 
         const data = await req.json();

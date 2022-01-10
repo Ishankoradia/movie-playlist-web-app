@@ -31,14 +31,13 @@ const SideBarPlaylists = () => {
 
         const token = localStorage.getItem('token');
 
-        const req = await fetch(`${config.SERVER_URI}/api/addplaylist`, {
+        const req = await fetch(`${config.SERVER_URI}/api/playlists`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-access-token': token,
             },
             body: JSON.stringify({
-                userdata: userData,
                 playlist: newPlaylistName,
                 is_public: isPublic
             })
@@ -55,15 +54,12 @@ const SideBarPlaylists = () => {
     async function fetchPlaylists(){
         const token = localStorage.getItem('token');
 
-        const req = await fetch(`${config.SERVER_URI}/api/getplaylists`, {
-            method: 'POST',
+        const req = await fetch(`${config.SERVER_URI}/api/playlists`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'x-access-token': token,
-            },
-            body: JSON.stringify({
-                userdata: userData,
-            })
+            }
         });
 
         const data = await req.json();

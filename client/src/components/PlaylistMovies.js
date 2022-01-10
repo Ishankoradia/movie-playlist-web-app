@@ -20,16 +20,12 @@ const PlaylistMovies = () => {
     async function fetchMovies(){
         const token = localStorage.getItem('token');
 
-        const req = await fetch(`${config.SERVER_URI}/api/getmovies`, {
-            method: 'POST',
+        const req = await fetch(`${config.SERVER_URI}/api/movies/${selectedPlaylistId}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'x-access-token': token,
-            },
-            body: JSON.stringify({
-                userdata: userData,
-                playlist_id: selectedPlaylistId
-            })
+            }
         });
 
         const data = await req.json();

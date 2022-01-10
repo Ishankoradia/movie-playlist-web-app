@@ -16,17 +16,12 @@ const PlaylistMovie = ({movie, refComp, setRefComp}) => {
     async function deleteMovie(){
         const token = localStorage.getItem('token');
 
-        const req = await fetch(`${config.SERVER_URI}/api/deletemovie`, {
+        const req = await fetch(`${config.SERVER_URI}/api/playlists/${selectedPlaylistId}/movies/${movie._id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'x-access-token': token,
-            },
-            body: JSON.stringify({
-                userdata: userData,
-                movie_id: movie._id,
-                playlist_id: selectedPlaylistId
-            })
+            }
         });
 
         const data = await req.json();

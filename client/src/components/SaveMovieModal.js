@@ -82,31 +82,28 @@ const Modal = ({show, setShow}) => {
             savedPlaylists.every(item2 => item1.playlist_id !== item2.playlist_id) : true);
        
 
-        const req = await fetch(`${config.SERVER_URI}/api/savemovietoplaylists`, {
+        const req = await fetch(`${config.SERVER_URI}/api/movies`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-access-token': token,
             },
             body: JSON.stringify({
-                userdata: userData,
                 movies: movies1,
             })
         });
 
         //movie playlists that were added before delete them if unselected {_id:adfgdf, playlist: asda}
         const deleteplaylists = savedPlaylists.filter(item1 => !movies.some(item2 => item1.playlist_id === item2.playlist_id));
-
-        const req1 = await fetch(`${config.SERVER_URI}/api/deletemovieplaylists`, {
+        console.log(deleteplaylists);
+        const req1 = await fetch(`${config.SERVER_URI}/api/movies/${currentMovie.imdbID}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'x-access-token': token,
             },
             body: JSON.stringify({
-                userdata: userData,
                 playlist_ids: deleteplaylists.map(item => item.playlist_id),
-                movie: currentMovie
             })
         });
 
@@ -118,21 +115,16 @@ const Modal = ({show, setShow}) => {
     async function getPlaylistsOfSelectedMovie(){
         const token = localStorage.getItem('token');
 
-        const req = await fetch(`${config.SERVER_URI}/api/getplaylistsofselectedmovie`, {
-            method: 'POST',
+        const req = await fetch(`${config.SERVER_URI}/api/playlists/movies/${currentMovie.imdbID}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'x-access-token': token,
-            },
-            body: JSON.stringify({
-                userdata: userData,
-                movie: currentMovie,
-            })
+            }
         });
 
         const data = await req.json();
         const updatedCheckedState = new Array(currentPlaylists.length).fill(false);
-        console.log(data.playlists);
         if(data.success){            
             data.playlists.map(item => {
                 const index = currentPlaylists.findIndex(p => p._id === item.playlist_id);

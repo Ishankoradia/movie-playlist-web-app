@@ -29,7 +29,6 @@ function Register() {
       window.location.href = '/login';
     }
 
-    console.log('Registered user: '+data);
   }
 
   return (

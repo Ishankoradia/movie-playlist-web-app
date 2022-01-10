@@ -1,15 +1,15 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const mongoose = require('mongoose');
-const User = require('./models/user.model');
 const Playlist = require('./models/playlist.model');
 const Movie = require('./models/movie.model');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const bcrypt = require('bcryptjs');
 const colors = require('colors');
 const connectDB = require('./db');
+const authRoutes = require('./routes/auth');
+const playlistRoutes = require('./routes/playlist');
+const movieRoutes = require('./routes/movie');
 
 dotenv.config();
 
@@ -24,259 +24,14 @@ connectDB();
 
 app.get('/', (req, res) => res.send('Hello'));
 
-app.post('/api/register', async (req, res) => {
-    try {
-        const encryptPassword = await bcrypt.hash(req.body.password, 10);
-        const user = await User.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: encryptPassword
-        });
-        res.json({success: true}); 
-    } catch (error) {
-        console.log(error);
-        res.json({success: false, error: 'Duplicate error'});  
-    }   
-    
-})
+app.use('/api', authRoutes);
 
-app.post('/api/login', async (req, res) => {
-    const user = await User.findOne({
-        email: req.body.email,
-    });
+app.use('/api', playlistRoutes);
 
-    if(!user){return res.json({success: false, error: "User does not exist"});}
-
-    const checkPassword = await bcrypt.compare(req.body.password, user.password);
-    
-    if(checkPassword){
-        const token = jwt.sign({
-                email: user.email,
-                name: user.name,
-                id: user._id
-            }, process.env.APP_SECRET_KEY
-        );
-
-        return res.json({success: true, user: token});
-    } else{
-        return res.json({success: false, user: false, error: "Please check your login credentials and try again."});
-    }
-})
-
-app.get('/api/authenticate', async (req, res) => {
-   
-    const token = req.headers['x-access-token'];
-    
-    try {
-        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
-        const email = decoded.email;  
-        const user = await User.findOne({ email: email });
-        
-        res.json({success: true, user: user})
-    } catch (error) {
-        res.json({success: false, error: 'invalid token'});
-    }
-
-    
-})
-
-app.post('/api/addplaylist', async (req, res) => {   
-
-    try {
-        const token = req.headers['x-access-token'];
-
-        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
-
-        const data = req.body;
-
-        if (token === data.userdata.token){
-            const playlist = await Playlist.create({
-                name: data.playlist,
-                user_id: data.userdata.user._id,
-                is_public: data.is_public
-            });
-    
-            return res.json({success: true, playlist: playlist});
-    
-        } else{
-            return res.json({success: false, error: 'invalid token'});
-        }
-    } catch (error) {
-        res.json({success: false, error: 'invalid token'});
-    }   
-    
-})
-
-
-app.post('/api/getplaylists', async (req, res) => {
-    try {
-        const token = req.headers['x-access-token'];
-        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
-
-        const data = req.body;
-
-        if (token === data.userdata.token){
-            const playlists = await Playlist.find({user_id: {$eq: data.userdata.user._id} }).sort({createdAt: -1});
-            return res.json({success: true, playlists: playlists});
-
-        } else{
-            return res.json({success: false, error: 'invalid token'});
-        }
-        
-    } catch (error) {
-        res.json({success: false, error: 'invalid token'});
-    }    
-    
-})
-
-app.delete('/api/deleteplaylist', async (req, res) => {
-    try {
-        const token = req.headers['x-access-token'];
-        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
-
-        const data = req.body;
-
-        if (token === data.userdata.token){
-            //remove playlist
-            const p = await Playlist.deleteOne({'_id': {$eq: data._id}});
-            //remove related movies also
-            const m = await Movie.deleteMany({'playlist_id': {$eq: data._id}});
-            return res.json({success: true});
-
-        } else{
-            return res.json({success: false, error: 'invalid token'});
-        }
-        
-    } catch (error) {
-        res.json({success: false, error: 'invalid token'});
-    }    
-    
-})
-
-
-app.post('/api/savemovietoplaylists', async (req, res) => {
-    try {
-        const token = req.headers['x-access-token'];
-        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
-
-        const data = req.body;
-
-        if (token === data.userdata.token){
-
-            const m = await Movie.insertMany(data.movies);  
-            
-            console.log("saving these "+ m);
-
-            //const playlists = await Playlist.find({user_id: {$eq: data.userdata.user._id} }).sort({createdAt: -1});
-            return res.json({success: true});
-
-        } else{
-            return res.json({success: false, error: 'invalid token'});
-        }
-        
-    } catch (error) {
-        res.json({success: false, error: 'invalid token'});
-    }    
-    
-})
-
-
-
-
-app.post('/api/getplaylistsofselectedmovie', async (req, res) => {
-    try {
-        const token = req.headers['x-access-token'];
-        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
-
-        const data = req.body;
-
-        if (token === data.userdata.token){           
-
-            const p = await Movie.find({imdbID: {$eq: data.movie.imdbID}}).select('playlist_id');
-            return res.json({success: true, playlists: p});
-
-        } else{
-            return res.json({success: false, error: 'invalid token'});
-        }
-        
-    } catch (error) {
-        res.json({success: false, error: 'invalid token'});
-    }    
-    
-})
-
-
-
-app.delete('/api/deletemovieplaylists', async (req, res) => {
-    try {
-        const token = req.headers['x-access-token'];
-        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
-
-        const data = req.body;
-
-        if (token === data.userdata.token){
-            //remove movie playlists
-            const m = await Movie.deleteMany({ imdbID: data.movie.imdbID, playlist_id: {$in: data.playlist_ids} });
-            return res.json({success: true});
-
-        } else{
-            return res.json({success: false, error: 'invalid token'});
-        }
-        
-    } catch (error) {
-        res.json({success: false, error: 'invalid token'});
-    }    
-    
-})
-
-
-app.delete('/api/deletemovie', async (req, res) => {
-    try {
-        const token = req.headers['x-access-token'];
-        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
-
-        const data = req.body;
-
-        if (token === data.userdata.token){
-            console.log("deleting from "+data.playlist_id+" and "+data.movie_id);
-            //remove movie 
-            const m = await Movie.deleteOne({_id: data.movie_id, playlist_id: {$eq: data.playlist_id} });
-            return res.json({success: true});
-
-        } else{
-            return res.json({success: false, error: 'invalid token'});
-        }
-        
-    } catch (error) {
-        res.json({success: false, error: 'invalid token'});
-    }    
-    
-})
-
-app.post('/api/getmovies', async (req, res) => {
-    try {
-        const token = req.headers['x-access-token'];
-        const decoded = jwt.verify(token, process.env.APP_SECRET_KEY);
-
-        const data = req.body;
-
-        if (token === data.userdata.token){
-            const movies = await Movie.find({playlist_id: {$eq: data.playlist_id} }).sort({createdAt: -1});
-            return res.json({success: true, movies: movies});
-
-        } else{
-            return res.json({success: false, error: 'invalid token'});
-        }
-        
-    } catch (error) {
-        res.json({success: false, error: 'invalid token'});
-    }    
-    
-})
+app.use('/api', movieRoutes);
 
 app.get('/playlistview/:id', async (req, res) => {
     try {
-        console.log("in playlists fetch");
         const playlist_id = req.params.id;
 
         const playlist = await Playlist.findOne({_id: playlist_id, is_public: {$eq: true}});

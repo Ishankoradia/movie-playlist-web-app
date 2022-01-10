@@ -22,7 +22,6 @@ const ListView = () => {
     //     }];
 
     async function getPlaylists(){
-        console.log(`${config.SERVER_URI}${window.location.pathname}`);
         const req = await fetch(`${config.SERVER_URI}${window.location.pathname}`, {
             method: 'GET',
             headers: {

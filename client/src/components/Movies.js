@@ -34,7 +34,6 @@ const Movies = () => {
         .then(resp => resp.json())
         .then(response => {
             if (response.Response === 'True') {
-                console.log("page change");
                 setError({
                     success: true,
                     error: ''

@@ -44,7 +44,6 @@ const Dashboard = () => {
         const token = localStorage.getItem('token');
         if(token){
             const user = jwt.decode(token);
-            console.log(user);
             if(!user){
                 localStorage.removeItem('token');
                 window.location.href = '/login';

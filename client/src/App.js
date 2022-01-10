@@ -4,7 +4,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
-import MyList from './pages/MyList';
 import UserContext from './context/userContext';
 import PlaylistContext from './context/playlistContext';
 import CurrentMovieContext from './context/currentMovieContext';
