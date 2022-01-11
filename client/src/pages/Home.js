@@ -41,10 +41,13 @@ const Container = styled.div`
     font-size: 100px;
 `;
 
-const PTag = styled.p`
+const PTag = styled.p`    
     padding: 5px;
     margin: 0;
     display: inline;
+    @media only screen and (max-width: 768px){
+        font-size: 30px;
+    }
 `;
 
 const TextContainer = styled.div`
@@ -56,8 +59,12 @@ const TextContainer = styled.div`
 const ButtonContainer = styled.div`
   padding: 5px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 20px;
+  @media only screen and (max-width: 768px){
+        flex-direction: column;
+        align-items:center;
+    }
 `;
 
 
@@ -72,7 +79,9 @@ const StyledLink = styled(Link)`
     font-size: 15px;
     text-align: center;
     &:hover {
-    background-color: rgb(85,85,85);
-    
-  }
+        background-color: rgb(85,85,85);    
+    }
+    @media only screen and (max-width: 768px){
+        width: 70%;
+    }
 `;
