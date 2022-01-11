@@ -126,13 +126,14 @@ const PlaylistContainer = styled.div`
     flex-direction: column;
     font-size: 15px;
     @media only screen and (max-width: 768px){
-        opacity: ${props => props.displayMobilePlaylist ? 1 : 0};
+        /*display: ${props => props.displayMobilePlaylist ? 'block' : 'none'};*/
         position: absolute;
-        z-index: 10;
+        z-index: ${props => props.displayMobilePlaylist ? 10 : -1000};
+        opacity: ${props => props.displayMobilePlaylist ? 1 : 0};
         background-color: white;
         width: 90%;
-        height: 500px;  
-        transition: opacity 1s ease-out   
+        height: 500px;
+        transition: opacity 1s ease-out  
     }
 `;
 

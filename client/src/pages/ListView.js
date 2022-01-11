@@ -146,7 +146,7 @@ const PlaylistContainer = styled.div`
         /*display: ${props => props.displayMobilePlaylist ? 'block' : 'none'};*/
         opacity: ${props => props.displayMobilePlaylist ? 1 : 0};
         position: absolute;
-        z-index: 10;
+        z-index: ${props => props.displayMobilePlaylist ? 10 : -1000};;
         background-color: white;
         width: 90%;
         height: 500px;
