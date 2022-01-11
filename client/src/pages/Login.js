@@ -61,23 +61,23 @@ const DivContainer = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('/images/app-background.jpg');
+  background-image: url('/images/app-background.jpg'); 
   display: flex;
- 
+  justify-content: center;
+  align-items:center;
 `;
 
 const Form = styled.form`
-
+ width: 50%;
+ @media only screen and (max-width: 768px){
+   width: 80%;
+ }
 `
 
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 100px;
-  right: 150px;
   gap: 100px;
-  width: 40%;
 `;
 
 const FormContainer = styled.div`
@@ -96,6 +96,9 @@ const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  @media only screen and (max-width: 768px){
+    flex-direction: column;
+  }
 `;
 
 const StyleLink = styled(Link)`
@@ -104,6 +107,9 @@ const StyleLink = styled(Link)`
   text-align: center;
   &:hover {
       color: white;
+  }
+  @media only screen and (max-width: 768px){
+    font-size: 10px;
   }
 `
 
@@ -115,5 +121,8 @@ const ButtonInput = styled.input`
   cursor: pointer;
   &:hover {
     background-color: rgb(85,85,85);
+  }
+  @media only screen and (max-width: 768px){
+    width: 70%;
   }
 `;
