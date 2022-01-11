@@ -44,6 +44,10 @@ const HeaderContainer = styled.div`
     justify-content: center;
     align-items: center;
     height: 75px;
+    @media only screen and (max-width: 768px) {
+        font-size: 11px;
+        height: 50px;
+    }
 `
 
 const Logo = styled.div`
@@ -58,6 +62,9 @@ const Logo = styled.div`
 
 const LogoTitle = styled.p`
     font-size: 20px;
+    @media only screen and (max-width: 768px) {
+        font-size: 11px;
+    }
 `;
 
 const NavBar = styled.div`
@@ -68,11 +75,17 @@ const NavBar = styled.div`
     height: 100%;
     align-items: center;
     gap: 20px;
+    @media only screen and (max-width: 768px) {
+        gap: 10px;
+    }
 `
 
 const UserName = styled.p`
     margin-right: 50px;
     color: grey;
+    @media only screen and (max-width: 768px) {
+        margin-right: 20px;
+    }
 `
 
 const NavItem = styled(Link)`
