@@ -163,12 +163,18 @@ const Input = styled.input`
     &:focus {
         outline: 1px solid #27242B;
     }
+    @media only screen and (max-width: 768px) {
+        width: 50%
+    }
 `
 
 const StyledSearchIcon = styled(SearchIcon)`
     cursor: pointer;
     position: absolute;
     right: 275px;
+    @media only screen and (max-width: 768px) {
+        right: 80px;
+    }
 `
 
 const StyleLoader = styled.div`
