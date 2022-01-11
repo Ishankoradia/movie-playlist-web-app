@@ -13,6 +13,8 @@ const ListView = () => {
 
     const [error, setError] = useState('');
 
+    const [displayMobilePlaylist, setDisplayMobilePlaylist] = useState(false);
+
     // const movies = [{
     //     "Title": "Batman: The Killing Joke",
     //     "Year": "2016",
@@ -46,6 +48,10 @@ const ListView = () => {
         getPlaylists()
     }, [])
 
+    const toggleFloatingPlaylistDisplay = () => {
+        setDisplayMobilePlaylist(!displayMobilePlaylist);
+    }
+
     return (
         <div>           
             <div>
@@ -60,7 +66,13 @@ const ListView = () => {
                     
                 </HeaderContainer>
                 <ContentContainer>
-                    <PlaylistContainer>
+                    <FloatingButtonContainer>
+                        <FloatingButton 
+                            onClick={toggleFloatingPlaylistDisplay}>
+                            Playlists
+                        </FloatingButton>
+                    </FloatingButtonContainer>
+                    <PlaylistContainer displayMobilePlaylist={displayMobilePlaylist}>
                         <PlaylistsContainer>
                             <PlaylistDiv>
                                 <div>
@@ -97,6 +109,23 @@ const ContentContainer = styled.div`
     height: 100vh;
 `;
 
+const FloatingButtonContainer = styled.div`
+    position: absolute;
+    transform: rotate(-90deg);
+    top: 150px;
+    left: -20px;
+    display: none;
+    @media only screen and (max-width: 768px){
+        display: block;
+        z-index: 12;
+    }
+`;
+
+const FloatingButton = styled.button`
+    border-radius: 10px;
+    border: 1px solid black;
+`;
+
 const Divider = styled.div`
     float:left;
     height:100px;
@@ -113,6 +142,14 @@ const PlaylistContainer = styled.div`
     display: flex;
     flex-direction: column;
     font-size: 15px;
+    @media only screen and (max-width: 768px){
+        display: ${props => props.displayMobilePlaylist ? 'block' : 'none'};
+        position: absolute;
+        z-index: 10;
+        background-color: white;
+        width: 90%;
+        height: 500px;        
+    }
 `;
 
 const PlaylistsContainer = styled.div`
@@ -173,6 +210,10 @@ const HeaderContainer = styled.div`
     justify-content: center;
     align-items: center;
     height: 75px;
+    @media only screen and (max-width: 768px) {
+        font-size: 12px;
+        height: 50px;
+    }
 `
 
 const Logo = styled.div`
@@ -187,6 +228,9 @@ const Logo = styled.div`
 
 const LogoTitle = styled.p`
     font-size: 20px;
+    @media only screen and (max-width: 768px) {
+        font-size: 12px;
+    }
 `;
 
 const NavBar = styled.div`

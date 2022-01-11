@@ -14,6 +14,8 @@ const config = require('../config/config');
 const Dashboard = () => {
     const { userData, setUserData } = useContext(UserContext);
     const [render, setRender] = useState(false); //render component only if the token is found and valid   
+
+    const [floatingbutton, setFloatingButton] = useState(false);
     
     //active selected playlist
     const {selectedPlaylistId, setSelectedPlaylistId} = useContext(CurrentPlaylistContext);
@@ -56,13 +58,23 @@ const Dashboard = () => {
         }
     }, []);
 
+    const toggleFloatingPlaylistDisplay = () => {
+        setFloatingButton(!floatingbutton);
+    }
+
     return (
         <div>
             {render && 
                 <div>
                     <Header highlight={"dashboard"} />
                     <ContentContainer>
-                        <SideBarPlaylists />
+                        <FloatingButtonContainer>
+                            <FloatingButton 
+                                onClick={toggleFloatingPlaylistDisplay}>
+                                Playlists
+                            </FloatingButton>
+                        </FloatingButtonContainer>
+                        <SideBarPlaylists displayMobilePlaylist={floatingbutton} />
                         <Divider></Divider>
                         {selectedPlaylistId === false ? <Movies /> : <PlaylistMovies />}
                     </ContentContainer>                   
@@ -78,6 +90,23 @@ const ContentContainer = styled.div`
     display:flex;
     height: 100%;
     height: 100vh;
+`;
+
+const FloatingButtonContainer = styled.div`
+    position: absolute;
+    transform: rotate(-90deg);
+    top: 150px;
+    left: -20px;
+    display: none;
+    @media only screen and (max-width: 768px){
+        display: block;
+        z-index: 12;
+    }
+`;
+
+const FloatingButton = styled.button`
+    border-radius: 10px;
+    border: 1px solid black;
 `;
 
 const Divider = styled.div`

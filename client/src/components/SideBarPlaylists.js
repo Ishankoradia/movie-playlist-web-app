@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 
 const config = require('../config/config');
 
-const SideBarPlaylists = () => {
+const SideBarPlaylists = ({displayMobilePlaylist}) => {
 
     const { userData, setUserData } = useContext(UserContext); //this has token and the current user
 
@@ -76,7 +76,7 @@ const SideBarPlaylists = () => {
     }, [userData]);
 
     return (
-        <PlaylistContainer>
+        <PlaylistContainer displayMobilePlaylist={displayMobilePlaylist}>
             <Title>
                 <Form onSubmit={createPlaylist}>
                     <InputContainer>
@@ -125,6 +125,14 @@ const PlaylistContainer = styled.div`
     display: flex;
     flex-direction: column;
     font-size: 15px;
+    @media only screen and (max-width: 768px){
+        display: ${props => props.displayMobilePlaylist ? 'block' : 'none'};
+        position: absolute;
+        z-index: 10;
+        background-color: white;
+        width: 90%;
+        height: 500px;        
+    }
 `;
 
 const Title = styled.div`    

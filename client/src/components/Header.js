@@ -45,7 +45,7 @@ const HeaderContainer = styled.div`
     align-items: center;
     height: 75px;
     @media only screen and (max-width: 768px) {
-        font-size: 11px;
+        font-size: 12px;
         height: 50px;
     }
 `
@@ -63,7 +63,7 @@ const Logo = styled.div`
 const LogoTitle = styled.p`
     font-size: 20px;
     @media only screen and (max-width: 768px) {
-        font-size: 11px;
+        font-size: 12px;
     }
 `;
 
